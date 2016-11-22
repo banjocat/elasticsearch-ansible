@@ -1,0 +1,15 @@
+path:
+    data: /media/volume/elastic/data
+    logs: /media/volume/elastic/log
+node.name: ${HOSTNAME}
+network.host: {{ansible_eth0.ipv4.address}}
+cluster.name: jack
+discovery.zen.ping.unicast.hosts:
+    {% for ip in groups['elastic'] %}
+    - {{ ip }}
+    {% endfor %}
+
+thread_pool:
+    generic:
+        keep_alive: 10m
+

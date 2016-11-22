@@ -1,0 +1,36 @@
+---
+
+- hosts: elastic
+  user: root
+  tasks:
+      - name: Add java repo
+        apt_repository: repo="ppa:openjdk-r/ppa"
+        tags:
+            - java
+      - name: Add openjdk 8
+        apt: name=openjdk-8-jdk
+        tags:
+            - java
+      - name: Install elastic search
+        apt: deb=https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.0.1.deb
+      - name: configuration elastic
+        template: src=./elasticsearch.yml dest=/etc/elasticsearch/elasticsearch.yml
+        tags:
+            - template
+      - name: Make volume structure
+        file:
+            path: /media/volume/elastic/{{item}}
+            state: directory
+            recurse: yes
+            owner: elasticsearch
+            group: elasticsearch
+        with_items:
+            - data
+            - log
+        tags:
+            - template
+      - name: Confirm elasticsearch is started up
+        service: name=elasticsearch state=started
+        tags:
+            - template
+
