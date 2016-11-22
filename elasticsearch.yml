@@ -4,6 +4,7 @@ path:
 node.name: ${HOSTNAME}
 network.host: {{ansible_eth0.ipv4.address}}
 cluster.name: jack
+http.port: 9200
 discovery.zen.ping.unicast.hosts:
     {% for ip in groups['elastic'] %}
     - {{ ip }}
